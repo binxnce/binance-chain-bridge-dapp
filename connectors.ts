@@ -14,7 +14,9 @@ const RPC_URLS: { [chainId: number]: string } = {
   4: process.env.RPC_URL_4 as string
 }
 
-export const injected = new InjectedConnector({ supportedChainIds: [56, 97] })
+// 56: binance mainnet
+// 97: binance testnet
+export const injected = new InjectedConnector({ supportedChainIds: [97] })
 
 export const network = new NetworkConnector({
   urls: { 1: RPC_URLS[1], 4: RPC_URLS[4] },
