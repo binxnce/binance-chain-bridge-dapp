@@ -1,6 +1,6 @@
 ## Threefold Binance Chain Dapp
 
-Decentralised application for Threefold binance chain (TESTNET).
+Decentralised application for TFT on Binance Smart Chain (TESTNET).
 
 ## Installation
 
