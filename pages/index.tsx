@@ -7,7 +7,7 @@ import {
 import { UserRejectedRequestError as UserRejectedRequestErrorWalletConnect } from '@web3-react/walletconnect-connector'
 import { UserRejectedRequestError as UserRejectedRequestErrorFrame } from '@web3-react/frame-connector'
 import { Web3Provider } from '@ethersproject/providers'
-import { Button } from 'react-bootstrap'
+import { Button } from '@material-ui/core'
 
 import { useEagerConnect, useInactiveListener } from '../hooks'
 import {

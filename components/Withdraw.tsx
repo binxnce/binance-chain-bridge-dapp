@@ -1,84 +1,89 @@
-import { Form, Button } from 'react-bootstrap'
-import { useFormik } from 'formik'
+import { FormControl, InputLabel, Input, FormHelperText, Button } from '@material-ui/core'
+import { useState } from 'react'
 
 import styles from './Withdraw.module.scss'
 
-const validate = values => {
-  const errors = {
-    stellarAddress: '',
-    amount: ''
-  }
-
-  if (!values.stellarAddress) {
-    errors.stellarAddress = 'Required'
-  } else if (values.stellarAddress.length > 15) {
-    errors.stellarAddress = 'Must be 15 characters or less'
-  }
-
-  if (!values.amount) {
-    errors.amount = 'Required'
-  }
-
-  return errors
-}
-
-
 export function Withdraw ({ balance, submitWithdraw }) {
-  const formik = useFormik({
-    initialValues: {
-      stellarAddress: '',
-      amount: 0,
-    },
-    validate,
-    onSubmit: values => {
-      const { stellarAddress, amount } = values
-      submitWithdraw(stellarAddress, amount)
-    },
-  })
+  const [stellarAddress, setStellarAddress] = useState('')
+  const [stellarAddressError, setStellarAddressError] = useState('')
+
+  const [amount, setAmount] = useState(balance / 1e7)
+  const [amountError, setAmountError] = useState('')
+
+  const submit = () => {
+    if (stellarAddress === '') {
+      setStellarAddressError('Address not valid')
+      return
+    }
+
+    if (amount <= 0 || amount > balance / 1e7) {
+      setAmountError('Amount not valid')
+      return
+    }
+
+    submitWithdraw(stellarAddress, amount)
+  }
+
+  const handleStellarAddressChange = (e) => {
+    setStellarAddressError('')
+    setStellarAddress(e.target.value)
+  }
+
+  const handleAmountChange = (e) => {
+    setAmountError('')
+    try {
+      const a = parseInt(e.target.value)
+      if (isNaN(a)) {
+        setAmount(0)
+      } else {
+        setAmount(a)
+      }
+    } catch (err) {
+      setAmountError(err)
+    }
+  }
 
   return (
     <div className={styles.container}>
       <span>Fill in this form to withdraw tokens back to Stellar</span>
-      <Form noValidate onSubmit={formik.handleSubmit}>
-        <Form.Group controlId="formStellarAddress">
-          <Form.Label className={styles.formLabel}>Stellar address</Form.Label>
-          <Form.Control
-            className={styles.formText}
-            placeholder="Enter Stellar Address"
-            required
-            name="stellarAddress"
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-            value={formik.values.stellarAddress}
+        <FormControl>
+          <InputLabel htmlFor="StellarAddress">Stellar Address</InputLabel>
+          <Input 
+            value={stellarAddress}
+            onChange={handleStellarAddressChange}
+            id="StellarAddress"
+            aria-describedby="my-helper-text"
           />
+          <FormHelperText id="my-helper-text">Enter a valid Stellar Address</FormHelperText>
+          {stellarAddressError && (
+            <div className={styles.errorField}>{stellarAddressError}</div>
+          )}
+        </FormControl>
 
-          {formik.touched.stellarAddress && formik.errors.stellarAddress ? (
-            <div className={styles.errorField}>{formik.errors.stellarAddress}</div>
-          ) : null}
-        </Form.Group>
-
-        <Form.Group controlId="formStellarAddress">
-          <Form.Label className={styles.formLabel}>Amount</Form.Label>
-          <Form.Control
-            className={styles.formText}
-            placeholder="Enter Amount"
-            required
-            name="amount"
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-            value={formik.values.amount}
-            type='number'
+        <FormControl>
+          <InputLabel htmlFor="StellarAddress">Amount</InputLabel>
+          <Input 
+            value={amount}
+            onChange={handleAmountChange}
+            id="amount"
+            aria-describedby="my-helper-text"
+            type='float'
           />
+          <FormHelperText id="my-helper-text">Enter an amount</FormHelperText>
+          {amountError && (
+            <div className={styles.errorField}>{amountError}</div>
+          )}
+        </FormControl>
 
-          {formik.touched.amount && formik.errors.amount ? (
-            <div className={styles.errorField}>{formik.errors.amount}</div>
-          ) : null}
-        </Form.Group>
-
-        <Button color='primary' variant="primary" style={{ marginTop: 25 }} type='submit'>
+        <Button 
+          color='primary'
+          variant="contained"
+          style={{ marginTop: 25 }}
+          type='submit'
+          onClick={() => submit()}
+        >
           Withdraw
         </Button>
-      </Form>
     </div>
   )
 }
