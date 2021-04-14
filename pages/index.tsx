@@ -16,11 +16,13 @@ import {
 import { Spinner } from '../components/Spinner'
 import { Balance } from '../components/Balance'
 import { Withdraw } from '../components/Withdraw'
+
 import { toast, ToastContainer } from 'react-nextjs-toast'
 
 const CONTRACT_ADDRESS_TESTNET = process.env.CONTRACT_ADDRESS as string
 const STELLAR_ENV = process.env.STELLAR_ENV as string
 import abi from '../tokenabi.json'
+import DepositDialog from '../components/Deposit'
 const Contract = require('web3-eth-contract')
 
 enum ConnectorNames {
@@ -112,6 +114,7 @@ function App() {
 
   const submitWithdraw = (stellarAddress, amount) => {
     setLoadingWithdrawal(true)
+    handleCloseWithdrawDialog()
 
     Contract.setProvider(library.provider)
     const contract = new Contract(abi, CONTRACT_ADDRESS_TESTNET)
@@ -131,6 +134,12 @@ function App() {
         toast.notify("Withdrawal failed", { type: 'error' })
       })
   }
+
+  const [openDepositDialog, setOpenDepositDialog] = useState(false)
+  const handleCloseDespoitDialog = () => setOpenDepositDialog(false)
+
+  const [openWithdrawDialog, setOpenWithdrawDialog] = useState(false)
+  const handleCloseWithdrawDialog = () => setOpenWithdrawDialog(false)
 
   return (
     <div>
@@ -159,13 +168,34 @@ function App() {
       <div style={{ width: '50%', margin: 'auto', textAlign: 'center' }}>
         <img style={{ width: '30%', height: '30%' }} src={'/3fold_logo.png'} />
         <h2>TFT Binance Chain bridge</h2>
-        {loadingWithdrawal ? (
-          <Spinner color={'black'} style={{ height: '25%', marginLeft: '-1rem' }} />
-        ) : (
-          <Balance balance={balance} />
-        )}
+
         {connected && !error && account && (
-          <Withdraw balance={balance} submitWithdraw={submitWithdraw} />
+          <>
+            <div>
+              {loadingWithdrawal ? (
+                <Spinner color={'black'} style={{ height: '25%', marginLeft: '-1rem' }} />
+              ) : (
+                <>
+                  <Balance balance={balance} />
+                </>
+              )}
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', marginTop: 20 }}>
+              <Button style={{ width: '50%', marginTop: 20, alignSelf: 'center' }} color='primary' variant='outlined' onClick={() => setOpenDepositDialog(true)}>
+                Deposit from Stellar
+              </Button>
+              <DepositDialog address={account} open={openDepositDialog} handleClose={handleCloseDespoitDialog} />
+              <Button style={{ width: '50%', marginTop: 20, alignSelf: 'center' }} color='default' variant='outlined' onClick={() => setOpenWithdrawDialog(true)}>
+                Withdraw to Stellar
+              </Button>
+              <Withdraw
+                open={openWithdrawDialog}
+                handleClose={handleCloseWithdrawDialog}
+                balance={balance}
+                submitWithdraw={submitWithdraw}
+              />
+            </div>
+          </>
         )}
       </div>
 
