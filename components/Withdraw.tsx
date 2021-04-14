@@ -1,5 +1,5 @@
 import { FormControl, InputLabel, Input, FormHelperText, Button } from '@material-ui/core'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import styles from './Withdraw.module.scss'
 
@@ -7,8 +7,15 @@ export function Withdraw ({ balance, submitWithdraw }) {
   const [stellarAddress, setStellarAddress] = useState('')
   const [stellarAddressError, setStellarAddressError] = useState('')
 
-  const [amount, setAmount] = useState(balance / 1e7)
+  const [amount, setAmount] = useState(0)
   const [amountError, setAmountError] = useState('')
+
+  // Initialize balance
+  useEffect(() => {
+    if (balance) {
+      setAmount(parseInt(balance) / 1e7)
+    }
+  }, [balance])
 
   const submit = () => {
     if (stellarAddress === '') {
