@@ -1,7 +1,13 @@
 import { FormControl, InputLabel, Input, FormHelperText, Button } from '@material-ui/core'
 import { useEffect, useState } from 'react'
+import stellar from 'stellar-sdk'
 
 import styles from './Withdraw.module.scss'
+
+const TFT_ASSET = 'TFT'
+const STELLAR_HORIZON_URL = process.env.STELLAR_HORIZON_URL
+const TFT_ASSET_ISSUER = process.env.TFT_ASSET_ISSUER
+const server = new stellar.Server(STELLAR_HORIZON_URL)
 
 export function Withdraw ({ balance, submitWithdraw }) {
   const [stellarAddress, setStellarAddress] = useState('')
@@ -17,9 +23,23 @@ export function Withdraw ({ balance, submitWithdraw }) {
     }
   }, [balance])
 
-  const submit = () => {
+  const submit = async () => {
     if (stellarAddress === '') {
       setStellarAddressError('Address not valid')
+      return
+    }
+
+    try {
+      // check if the account provided exists on stellar
+      const account = await server.loadAccount(stellarAddress)
+      // check if the account provided has the appropriate trustlines
+      const includes = account.balances.find(b => b.asset_code === TFT_ASSET && b.asset_issuer === TFT_ASSET_ISSUER)
+      if (!includes) {
+        setStellarAddressError('Address does not have a valid trustline to TFT')
+        return
+      }
+    } catch (error) {
+      setStellarAddressError('Address not found')
       return
     }
 
@@ -27,6 +47,9 @@ export function Withdraw ({ balance, submitWithdraw }) {
       setAmountError('Amount not valid')
       return
     }
+
+    setStellarAddressError('')
+    setAmountError('')
 
     submitWithdraw(stellarAddress, amount)
   }
