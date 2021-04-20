@@ -35,7 +35,7 @@ export default function DepositDialog({ open, handleClose, address }) {
           <DialogContentText style={{ margin: 'auto', textAlign: 'center',  width: '50%', display: 'flex', flexDirection: 'column' }}>
             <WarningIcon style={{ alignSelf: 'center', fontSize: 40, color : 'orange' }}/>
             If you want to swap your Stellar TFT to Binance Chain TFT you can transfer any amount to the destination address. 
-            Note that you have to explicity send the generated memo text! <b style={{ color: 'red', marginTop: 5 }}>Sending funds to any other address or without memo text will result in loss of funds!</b>
+            Important Note: Please always include the generated memo text for every swap transaction. <b style={{ color: 'red', marginTop: 5 }}>Failure to do so will result in unrecoverable loss of funds!</b>
           </DialogContentText>
 
           <FormControlLabel
@@ -43,7 +43,7 @@ export default function DepositDialog({ open, handleClose, address }) {
             control={
               <Checkbox value={checked} onChange={(e) => setChecked(e.target.checked)} />
             }
-            label="I aggree that I can send any amount to the specified address with specified memo text, other information will result in loss of funds."
+            label="I understand that I need to include the generated memo text for every swap transaction, I am responsible for the loss of funds consequence otherwise."
           />
 
           {checked && (
