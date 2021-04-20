@@ -9,7 +9,7 @@ import QrCode from 'qrcode.react'
 import WarningIcon from '@material-ui/icons/Warning'
 import { Checkbox, FormControlLabel } from '@material-ui/core'
 
-const BRIDGE_TFT_ADDRESS = process.env.BRIDGE_TFT_ADDRESS || 'GCV3MIR5VFTDPD6CDCKTP65KPV7BOXOPSSHSFUO3QDREGEQR46HI7UCG'
+const BRIDGE_TFT_ADDRESS = process.env.BRIDGE_TFT_ADDRESS
 
 export default function DepositDialog({ open, handleClose, address }) {
   if (!address) return null
