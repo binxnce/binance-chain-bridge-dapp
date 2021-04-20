@@ -18,6 +18,8 @@ export default function DepositDialog({ open, handleClose, address }) {
 
   const [checked, setChecked] = useState(false)
 
+  const encodedAddress = encodeURIComponent(parsedAddress)
+
   return (
     <div>
       <Dialog
@@ -55,8 +57,8 @@ export default function DepositDialog({ open, handleClose, address }) {
                 <h4>
                     Or scan the QR code with Threefold Connect
                 </h4>
-                <span></span>
-                <QrCode style={{ alignSelf: 'center' }} value={`TFT:${BRIDGE_TFT_ADDRESS}?message=${parsedAddress}&sender=me`} />
+                
+                <QrCode style={{ alignSelf: 'center' }} value={`TFT:${BRIDGE_TFT_ADDRESS}?message=${encodedAddress}&sender=me`} />
               </DialogContentText>
             </>
           )}
