@@ -1,4 +1,4 @@
-## Threefold - Binance Smart Chain Dapp
+## ThreeFold - Binance Smart Chain Dapp
 
 Decentralised application for TFT on Binance Smart Chain (TESTNET).
 
