@@ -1,7 +1,7 @@
 {
   "name": "web3-react-example",
   "scripts": {
-    "start": "next",
+    "start": "next dev",
     "build": "next build && next export"
   },
   "dependencies": {
