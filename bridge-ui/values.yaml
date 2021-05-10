@@ -33,14 +33,14 @@ service:
 
 global:
   ingress:
-    certresolver: default
+    certresolver: le
 
 ingress:
   enabled: true
   annotations:
     kubernetes.io/ingress.class: traefik
   hosts:
-    - host: bridge.bsc.testnet.threefold.io
+    - host: host.local
       paths: 
         - /
   tls: []
