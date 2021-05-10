@@ -31,6 +31,10 @@ service:
   type: ClusterIP
   port: 80
 
+global:
+  ingress:
+    certresolver: default
+
 ingress:
   enabled: true
   annotations:
@@ -39,10 +43,7 @@ ingress:
     - host: bridge.bsc.testnet.threefold.io
       paths: 
         - /
-  tls:
-    - secretName: bridge.bsc.testnet.threefold.io-cert
-      hosts:
-        - bridge.bsc.testnet.threefold.io
+  tls: []
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
